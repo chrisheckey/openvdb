@@ -23,7 +23,7 @@ configuration:
   - Release
 
 environment:
-  CMAKE_GENERATOR: "Visual Studio 14 2015 Win64"
+  CMAKE_GENERATOR: Visual Studio 14 2015 Win64
   VCPKG_DEFAULT_TRIPLET: x64-windows
 
 os:
@@ -46,7 +46,7 @@ before_build:
 build_script:
   - cmd: cd %APPVEYOR_BUILD_FOLDER%
     # Build to match Houdini 16.5 ABI (OpenVDB 4.0.1)
-  - cmd: cmake -G%CMAKE_GENERATOR% -DCMAKE_CONFIGURATION_TYPES=%CONFIGURATION% -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DOPENVDB_ABI_VERSION_NUMBER=4 ../..
+  - cmd: cmake -G"%CMAKE_GENERATOR%" -DCMAKE_CONFIGURATION_TYPES=%CONFIGURATION% -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DOPENVDB_ABI_VERSION_NUMBER=4 ../..
   - cmd: cmake --build . --config %CONFIGURATION% --target install
 
 #init:
