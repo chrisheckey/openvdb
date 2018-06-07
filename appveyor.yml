@@ -24,6 +24,7 @@ configuration:
 
 environment:
   CMAKE_GENERATOR: "Visual Studio 14 2015 Win64"
+  VCPKG_DEFAULT_TRIPLET: x64-windows
 
 os:
   - Visual Studio 2015
@@ -31,24 +32,22 @@ os:
 cache: c:\tools\vcpkg\installed\ -> appveyor.yml
 
 before_build:
-  - cmd:
-    - cd C:\tools\vcpkg 
-    - vcpkg install glew:x64-windows glfw3:x64-windows zlib:x64-windows blosc:x64-windows openexr:x64-windows tbb:x64-windows cppunit:x64-windows
-    - vcpkg integrate install
+  - cmd: cd C:\tools\vcpkg
+  - cmd: vcpkg install glew glfw3 zlib blosc openexr tbb cppunit
+  - cmd: vcpkg integrate install
 
-    - set BOOST_ROOT=C:\Libraries\boost_1_67_0
-    - set BOOST_LIBRARYDIR=C:\Libraries\boost_1_67_0\lib64-msvc-14.0
-    - set CMAKE_PREFIX_PATH=%CMAKE_PREFIX_PATH%;%BOOST_ROOT%
+  - cmd: set BOOST_ROOT=C:\Libraries\boost_1_67_0
+  - cmd: set BOOST_LIBRARYDIR=C:\Libraries\boost_1_67_0\lib64-msvc-14.0
+  - cmd: set CMAKE_PREFIX_PATH=%CMAKE_PREFIX_PATH%;%BOOST_ROOT%
 
-    - set PYTHON_ROOT = "C:\Python27-x64"
-    - set CMAKE_PREFIX_PATH=%CMAKE_PREFIX_PATH%;%PYTHON_ROOT%
+  - cmd: set PYTHON_ROOT = "C:\Python27-x64"
+  - cmd: set CMAKE_PREFIX_PATH=%CMAKE_PREFIX_PATH%;%PYTHON_ROOT%
 
 build_script:
-  - cmd:
-    - cd %APPVEYOR_BUILD_FOLDER%
+  - cmd: cd %APPVEYOR_BUILD_FOLDER%
     # Build to match Houdini 16.5 ABI (OpenVDB 4.0.1)
-    - cmake -G%CMAKE_GENERATOR% -DCMAKE_CONFIGURATION_TYPES=%CONFIGURATION% -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DOPENVDB_ABI_VERSION_NUMBER=4 ../..
-    - cmake --build . --config %CONFIGURATION% --target install
+  - cmd: cmake -G%CMAKE_GENERATOR% -DCMAKE_CONFIGURATION_TYPES=%CONFIGURATION% -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DOPENVDB_ABI_VERSION_NUMBER=4 ../..
+  - cmd: cmake --build . --config %CONFIGURATION% --target install
 
 #init:
 #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
