@@ -1,0 +1,67 @@
+clone_depth: 10
+
+version: 5.2.{build}
+
+test: off
+
+branches:
+  only:
+    - win_build
+
+skip_tags: true
+
+build:
+  parallel: true
+  verbosity: detailed
+
+platform:
+  - x64
+  # - x86
+
+configuration:
+  #- Debug
+  - Release
+
+environment:
+  CMAKE_GENERATOR: "Visual Studio 14 2015 Win64"
+
+os:
+  - Visual Studio 2015
+
+cache: c:\tools\vcpkg\installed\ -> appveyor.yml
+
+before_build:
+  - cmd:
+
+    cd C:\tools\vcpkg 
+
+    vcpkg install glew:x64-windows glfw3:x64-windows zlib:x64-windows blosc:x64-windows openexr:x64-windows tbb:x64-windows cppunit:x64-windows
+
+    vcpkg integrate install
+
+    set BOOST_ROOT=C:\Libraries\boost_1_67_0
+    set BOOST_LIBRARYDIR=C:\Libraries\boost_1_67_0\lib64-msvc-14.0
+    set CMAKE_PREFIX_PATH=%CMAKE_PREFIX_PATH%;%BOOST_ROOT%
+
+    set PYTHON_ROOT = "C:\Python27-x64"
+    set CMAKE_PREFIX_PATH=%CMAKE_PREFIX_PATH%;%PYTHON_ROOT%
+
+build_script:
+  - cmd:
+    cd %APPVEYOR_BUILD_FOLDER%
+
+    # Build to match Houdini 16.5 ABI (OpenVDB 4.0.1)
+    cmake -G %CMAKE_GENERATOR% -D CMAKE_CONFIGURATION_TYPES=%CONFIGURATION%^ 
+     -D CMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake ^
+     -D OPENVDB_ABI_VERSION_NUMBER=4 ^
+    ../..
+
+    cmake --build . --config %CONFIGURATION% --target install
+
+#init:
+#- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+#on_failure:
+#- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+
