@@ -24,13 +24,14 @@ configuration:
 
 environment:
   CMAKE_GENERATOR: Visual Studio 14 2015 Win64
-  VCPKG_DEFAULT_TRIPLET: x64-windows
+  VCPKG_DEFAULT_TRIPLET: x64-windows-rel
   VCPKG_x64_SHARED_ROOT: C:/tools/vcpkg/installed/x64-windows
 
 os:
   - Visual Studio 2015
 
-cache: c:\tools\vcpkg\installed\ -> appveyor.yml
+cache: c:\tools\vcpkg\installed\
+# cache: c:\tools\vcpkg\installed\ -> appveyor.yml
 
 before_build:
   - cmd: cd C:\tools\vcpkg
@@ -50,7 +51,7 @@ build_script:
   - cmd: mkdir build
   - cmd: cd build
     # Build to match Houdini 16.5 ABI (OpenVDB 4.0.1)
-  - cmd: cmake .. -G"%CMAKE_GENERATOR%" -DGLEW_LOCATION=%VCPKG_x64_SHARED_ROOT% -DCMAKE_CONFIGURATION_TYPES=%CONFIGURATION% -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DOPENVDB_ABI_VERSION_NUMBER=4 -DUSE_GLFW3=ON
+  - cmd: cmake .. -G"%CMAKE_GENERATOR%" -DGLEW_LOCATION=%VCPKG_x64_SHARED_ROOT% -DGLFW3_LOCATION=%VCPKG_x64_SHARED_ROOT% -DCMAKE_CONFIGURATION_TYPES=%CONFIGURATION% -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DOPENVDB_ABI_VERSION_NUMBER=4 -DUSE_GLFW3=ON
   - cmd: cmake --build . --config %CONFIGURATION% --target install
 
 #init:
