@@ -45,8 +45,10 @@ before_build:
 
 build_script:
   - cmd: cd %APPVEYOR_BUILD_FOLDER%
+  - cmd: mkdir build
+  - cmd: cd build
     # Build to match Houdini 16.5 ABI (OpenVDB 4.0.1)
-  - cmd: cmake -G"%CMAKE_GENERATOR%" -DCMAKE_CONFIGURATION_TYPES=%CONFIGURATION% -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DOPENVDB_ABI_VERSION_NUMBER=4 ../..
+  - cmd: cmake -G"%CMAKE_GENERATOR%" -DCMAKE_CONFIGURATION_TYPES=%CONFIGURATION% -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DOPENVDB_ABI_VERSION_NUMBER=4 ..
   - cmd: cmake --build . --config %CONFIGURATION% --target install
 
 #init:
