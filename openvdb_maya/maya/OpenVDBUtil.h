@@ -36,6 +36,16 @@
 
 #include "OpenVDBData.h"
 
+#if defined(__APPLE__) || defined(MACOSX)
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#elif defined(WIN32)
+#include <GL/glew.h>
+#else
+#include <GL/gl.h>
+#include <GL/glu.h>
+#endif
+
 #include <openvdb/openvdb.h>
 #include <openvdb/Types.h>
 #include <openvdb/tree/LeafManager.h>
@@ -50,14 +60,6 @@
 #include <maya/MDataHandle.h>
 #include <maya/MFnPluginData.h>
 #include <maya/MTime.h>
-
-#if defined(__APPLE__) || defined(MACOSX)
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#else
-#include <GL/gl.h>
-#include <GL/glu.h>
-#endif
 
 #include <algorithm> // for std::min(), std::max()
 #include <cmath> // for std::abs(), std::floor()
