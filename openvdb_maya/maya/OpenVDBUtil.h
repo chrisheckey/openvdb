@@ -34,6 +34,7 @@
 #ifndef OPENVDB_MAYA_UTIL_HAS_BEEN_INCLUDED
 #define OPENVDB_MAYA_UTIL_HAS_BEEN_INCLUDED
 
+#define MNoPluginEntry
 #include "OpenVDBData.h"
 
 #if defined(__APPLE__) || defined(MACOSX)
