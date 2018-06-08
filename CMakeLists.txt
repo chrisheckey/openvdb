@@ -38,6 +38,11 @@ if(CCACHE_FOUND)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
 endif(CCACHE_FOUND)
 
+# More specific options for windows
+OPTION ( OPENVDB_BUILD_TOOLS "Build OpenVDB utilities" ON )
+OPTION ( OPENVDB_STATIC "Build statically linked library" ON )
+OPTION ( OPENVDB_SHARED "Build dynamically linked library" ON )
+
 OPTION ( OPENVDB_BUILD_UNITTESTS "Build the OpenVDB unit tests" ON )
 OPTION ( OPENVDB_BUILD_DOCS "Build the OpenVDB documentation" OFF )
 OPTION ( OPENVDB_BUILD_PYTHON_MODULE "Build the pyopenvdb Python module" ON )
