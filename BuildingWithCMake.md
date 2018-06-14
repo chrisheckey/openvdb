@@ -182,3 +182,106 @@ cmake ^
       -G "Visual Studio 14 2015 Win64" ^
       ..\nyue_openvdb_git
 ```
+
+### Build Maya Plugin 
+```{r, engine='batch', count_lines}
+setlocal
+:: Build Settings
+set OPENVDB_ABI="4"
+set TESTS=OFF
+set PYTHON_MODULE=OFF
+set TOOLS=OFF
+set DOCS=OFF
+
+rem Assumes we have vcpkg and our custom built Maya Python 2.7.11 two levels up
+set DEV_DIR=%~dp0..\..\
+
+rem Put Maya Deps in the DEPS_DIR before running
+set DEPS_DIR=%~dp0deps
+
+set CMAKE_GENERATOR="Visual Studio 14 2015 Win64"
+
+set VCPKG_ROOT=%DEV_DIR%vcpkg
+set VCPKG_x64_SHARED_ROOT=%VCPKG_ROOT%/installed/x64-windows
+set VCPKG_x64_STATIC_ROOT=%VCPKG_ROOT%/installed/x64-windows-static
+:: Install Packages with vcpkg before running
+rem vcpkg install glew glfw3 zlib blosc openexr tbb cppunit
+rem vcpkg integrate install
+rem set CMAKE_PREFIX_PATH=%CMAKE_PREFIX_PATH%;%VCPKG_ROOT%
+
+set PYTHON_ROOT="%DEV_DIR%/Pythons/msc-1900/2.7.11"
+set CMAKE_PREFIX_PATH=%CMAKE_PREFIX_PATH%;%PYTHON_ROOT%
+
+set MAYA_ROOT="C:/Program Files/Autodesk/Maya2018"
+
+set TBB_ROOT=%DEPS_DIR%\tbb_4_4_update6
+set BOOST_ROOT=%DEPS_DIR%\boost_1_61_0
+set GLEW_ROOT=%DEPS_DIR%\glew_1_10_0
+set CMAKE_PREFIX_PATH=%CMAKE_PREFIX_PATH%;%MAYA_ROOT%
+
+set CMAKE_PREFIX_PATH=%CMAKE_PREFIX_PATH%;%BOOST_ROOT%
+
+set CMAKE_MODULE_PATH=%VCPKG_ROOT%\installed\x64-windows\share\openexr
+
+:: Build
+mkdir build
+cd build
+
+
+cmake -G "Visual Studio 14 2015 Win64" ^
+ -DCMAKE_TOOLCHAIN_FILE=%VCPKG_ROOT%/scripts/buildsystems/vcpkg.cmake ^
+ -DVCPKG_TARGET_TRIPLET=x64-windows ^
+ -DVCPKG_CRT_LINKAGE="dynamic" ^
+
+ -DCMAKE_CONFIGURATION_TYPES="Release" ^
+ -DCMAKE_INSTALL_PREFIX=%INSTALL_ROOT% ^
+ -DOPENVDB_ABI_VERSION_NUMBER=%OPENVDB_ABI% ^
+ -DUSE_GLFW3=ON ^
+
+ -DOPENVDB_SHARED=ON ^
+ -DOPENVDB_STATIC=OFF ^
+
+ -DOPENVDB_BUILD_TOOLS=%TOOLS% ^
+ -DOPENVDB_BUILD_PYTHON_MODULE=%PYTHON_MODULE% ^
+ -DOPENVDB_BUILD_UNITTESTS=%TESTS% ^
+ -DOPENVDB_BUILD_DOCS=%DOCS% ^
+
+ -DBOOST_ROOT=%BOOST_ROOT% ^
+ -DBOOST_INCLUDEDIR=%BOOST_ROOT% ^
+ -DBOOST_LIBRARYDIR=%BOOST_ROOT%\lib64-msvc-14.0 ^
+ -DBoost_NO_SYSTEM_PATHS=ON ^
+ -DBoost_INCLUDE_DIR=%BOOST_ROOT% ^
+ -DBoost_LIBRARY_DIRS=%BOOST_ROOT%\lib64-msvc-14.0 ^
+ -DEXACT_BOOST_VERSION=1.61 ^
+
+ -DTBB_LOCATION=%TBB_ROOT% ^
+ -DTBB_LIBRARYDIR=%TBB_ROOT%/lib ^
+
+ -DGLEW_LOCATION=%GLEW_ROOT% ^
+
+ -DZLIB_INCLUDE_DIR=%VCPKG_x64_STATIC_ROOT%/include ^
+ -DZLIB_LIBRARY=%VCPKG_x64_STATIC_ROOT%/lib/zlib.lib ^
+
+ -DCPPUNIT_LOCATION=%VCPKG_x64_STATIC_ROOT% ^
+ -DCPPUNIT_USE_STATIC_LIBS=ON ^
+
+ -DBLOSC_LOCATION=%VCPKG_x64_SHARED_ROOT% ^
+
+ -DGLFW3_LOCATION=%VCPKG_x64_SHARED_ROOT% ^
+ -DGLFW3_glfw_LIBRARY=%VCPKG_x64_SHARED_ROOT%/lib/glfw3dll.lib ^
+
+ -DPYTHON_INCLUDE_DIR=%PYTHON_ROOT%/include ^
+ -DPYTHON_EXECUTABLE=%PYTHON_ROOT%/python.exe ^
+ -DPYTHON_LIBRARY=%PYTHON_ROOT%/libs/python27.lib ^
+
+ -DMAYA_LOCATION=%MAYA_ROOT% ^
+
+ -DOPENEXR_LOCATION=%VCPKG_x64_SHARED_ROOT% ^
+ -DILMBASE_LOCATION=%VCPKG_x64_SHARED_ROOT% ^
+ -DOPENVDB_BUILD_MAYA_PLUGIN=ON ^
+ -DOPENVDB_MAYA_INSTALL_MOD=ON ^
+ -DOPENVDB_MAYA_SUBDIR=OFF ^
+ -DMAYA_SEARCH_SHIPPED_BOOST=ON ^
+ -DOPENVDB_MAYA_INSTALL_BASE_DIR=%INSTALL_ROOT%/maya2018 ^
+..
+```
