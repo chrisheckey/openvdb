@@ -261,7 +261,7 @@ IF ( OPENVDB_BUILD_TOOLS )
     ${CMAKE_THREAD_LIBS_INIT}
     ${BLOSC_blosc_LIBRARY}
     #m
-    stdc++
+    #stdc++
     )
 
   SET ( VDB_RENDER_SOURCE_FILES cmd/openvdb_render/main.cc )
@@ -281,7 +281,7 @@ IF ( OPENVDB_BUILD_TOOLS )
     ${Ilmbase_ILMTHREAD_LIBRARY}
     ${Ilmbase_IEX_LIBRARY}
     #m
-    stdc++
+    #stdc++
     )
 
   SET ( VDB_VIEW_SOURCE_FILES
@@ -316,7 +316,7 @@ IF ( OPENVDB_BUILD_TOOLS )
       ${GLFW_DEPENDENT_LIBRARIES}
       ${GLEW_GLEW_LIBRARY}
       #m
-      stdc++
+      #stdc++
       )
   # ENDIF ()
 ENDIF ( OPENVDB_BUILD_TOOLS )
@@ -426,7 +426,7 @@ IF ( OPENVDB_BUILD_UNITTESTS )
     ${CPPUnit_cppunit_LIBRARY}
     openvdb_shared
     #m
-    stdc++
+    #stdc++
     )
 
   ADD_TEST ( vdb_unit_test vdb_test )
