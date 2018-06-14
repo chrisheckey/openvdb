@@ -227,7 +227,6 @@ set CMAKE_MODULE_PATH=%VCPKG_ROOT%\installed\x64-windows\share\openexr
 mkdir build
 cd build
 
-
 cmake -G "Visual Studio 14 2015 Win64" ^
  -DCMAKE_TOOLCHAIN_FILE=%VCPKG_ROOT%/scripts/buildsystems/vcpkg.cmake ^
  -DVCPKG_TARGET_TRIPLET=x64-windows ^
