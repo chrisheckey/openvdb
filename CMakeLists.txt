@@ -67,6 +67,10 @@ IF ( APPLE )
   ENDIF ()
 ENDIF ()
 
+IF (MSVC)
+  ADD_DEFINITIONS("/bigobj")
+ENDIF()
+
 LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 SET ( OPENVDB_TOP_LEVEL_DIR ${PROJECT_SOURCE_DIR} CACHE PATH "OpenVDB Top Level Directory to share among sub projects" )
