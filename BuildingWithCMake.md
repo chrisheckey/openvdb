@@ -2,14 +2,14 @@
 
 > All rights reserved. This software is distributed under the
 > Mozilla Public License 2.0 ( http://www.mozilla.org/MPL/2.0/ )
-
+>
 > Redistributions of source code must retain the above copyright
 > and license notice and the following restrictions and disclaimer.
-
+>
 > Neither the name of DreamWorks Animation nor the names of
 > its contributors may be used to endorse or promote products derived
 > from this software without specific prior written permission.
-
+>
 > THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 > "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 > LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
