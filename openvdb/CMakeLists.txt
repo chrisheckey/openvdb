@@ -260,9 +260,14 @@ IF ( OPENVDB_BUILD_TOOLS )
     openvdb_shared
     ${CMAKE_THREAD_LIBS_INIT}
     ${BLOSC_blosc_LIBRARY}
-    #m
-    #stdc++
     )
+
+  IF ( NOT WIN32)
+    TARGET_LINK_LIBRARIES ( vdb_print
+      m
+      stdc++
+    )
+  ENDIF ()
 
   SET ( VDB_RENDER_SOURCE_FILES cmd/openvdb_render/main.cc )
   SET_SOURCE_FILES_PROPERTIES ( ${VDB_RENDER_SOURCE_FILES}
@@ -280,9 +285,14 @@ IF ( OPENVDB_BUILD_TOOLS )
     ${Openexr_ILMIMF_LIBRARY}
     ${Ilmbase_ILMTHREAD_LIBRARY}
     ${Ilmbase_IEX_LIBRARY}
-    #m
-    #stdc++
     )
+
+  IF ( NOT WIN32)
+    TARGET_LINK_LIBRARIES ( vdb_render
+      m
+      stdc++
+    )
+  ENDIF ()
 
   SET ( VDB_VIEW_SOURCE_FILES
     cmd/openvdb_view/main.cc
@@ -296,29 +306,34 @@ IF ( OPENVDB_BUILD_TOOLS )
     PROPERTIES
     COMPILE_FLAGS "-DOPENVDB_USE_BLOSC ${OPENVDB_USE_GLFW_FLAG} -DGL_GLEXT_PROTOTYPES=1"
     )
-  # IF (NOT WIN32)
-    ADD_EXECUTABLE ( vdb_view
-      ${VDB_VIEW_SOURCE_FILES}
-      )
-    
-    target_include_directories ( vdb_view SYSTEM PRIVATE ${Boost_INCLUDE_DIR} )
 
+  ADD_EXECUTABLE ( vdb_view
+    ${VDB_VIEW_SOURCE_FILES}
+    )
+  
+  target_include_directories ( vdb_view SYSTEM PRIVATE ${Boost_INCLUDE_DIR} )
+
+  TARGET_LINK_LIBRARIES ( vdb_view
+    openvdb_shared
+    ${Boost_LIBRARIES}
+    ${OPENGL_gl_LIBRARY}
+    ${OPENGL_glu_LIBRARY}
+    ${GLFW_LINK_LIBRARY}
+    ${GLFW_DEPENDENT_LIBRARIES}
+    ${GLEW_GLEW_LIBRARY}
+    )
+
+  IF ( NOT WIN32)
     TARGET_LINK_LIBRARIES ( vdb_view
-      openvdb_shared
-      # ${Boost_THREAD_LIBRARY}
-      ${Boost_LIBRARIES}
-      ${OPENGL_gl_LIBRARY}
-      ${OPENGL_glu_LIBRARY}
-      #${COCOA_LIBRARY}
-      #${IOKIT_LIBRARY}
-      #${COREVIDEO_LIBRARY}
-      ${GLFW_LINK_LIBRARY}
-      ${GLFW_DEPENDENT_LIBRARIES}
-      ${GLEW_GLEW_LIBRARY}
-      #m
-      #stdc++
-      )
-  # ENDIF ()
+      ${Boost_THREAD_LIBRARY}
+      ${COCOA_LIBRARY}
+      ${IOKIT_LIBRARY}
+      ${COREVIDEO_LIBRARY}
+      m
+      stdc++
+  )
+  ENDIF ()
+
 ENDIF ( OPENVDB_BUILD_TOOLS )
 
 SET ( UNITTEST_SOURCE_FILES
@@ -425,13 +440,18 @@ IF ( OPENVDB_BUILD_UNITTESTS )
   TARGET_LINK_LIBRARIES ( vdb_test
     ${CPPUnit_cppunit_LIBRARY}
     openvdb_shared
-    #m
-    #stdc++
     )
 
+  # Assumes we are using a static cppunit built with vcpkg,
+  # which builds with /MT by default
   IF (MSVC)
     SET_TARGET_PROPERTIES( vdb_test
       PROPERTIES COMPILE_FLAGS "/MT"
+    )
+  ELSE()
+    TARGET_LINK_LIBRARIES ( vdb_test
+      m
+      stdc++
     )
   ENDIF()
 
