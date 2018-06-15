@@ -45,6 +45,9 @@ export ILMBASE_ROOT=$HOME/systems/OpenEXR/v2.2.0
 export OPENEXR_ROOT=$HOME/systems/OpenEXR/v2.2.0
 export BLOSC_ROOT=$HOME/systems/blosc/v1.7.0
 cmake -Wno-dev \
+    -D OPENVDB_BUILD_TOOLS=ON \
+    -D OPENVDB_STATIC=ON \
+    -D OPENVDB_SHARED=ON \
     -D OPENEXR_NAMESPACE_VERSIONING=OFF \
     -D CMAKE_CXX_FLAGS="-fPIC -std=c++11" \
     -D TBB_LIBRARY_DIR=$TBB_ROOT/lib \
@@ -73,6 +76,9 @@ export TBB_ROOT=$RHOME/Systems/tbb/tbb44_20150728oss
 export GLFW3_ROOT=$RHOME/Systems/glfw/v3.2.1
 export BLOSC_ROOT=$RHOME/Systems/c-blosc/v1.7.0
 cmake \
+    -D OPENVDB_BUILD_TOOLS=ON \
+    -D OPENVDB_STATIC=ON \
+    -D OPENVDB_SHARED=ON \
     -D PYTHON_LIBRARY=/sw/external/COS6/python/2.6.4/lib/libpython2.6.so \
     -D PYTHON_INCLUDE_DIR=/sw/external/COS6/python/2.6.4/include/python2.6 \
     -D CMAKE_CXX_COMPILER=/sw/external/COS6/gcc/4.8.2/bin/g++ \
@@ -99,6 +105,7 @@ export OPENEXR_ROOT=$HT
 export GLFW3_ROOT=$HOME/systems/glfw/v3.2.1
 export CPPUNIT_ROOT=$HOME/systems/cppunit/v1.10.2
 cmake \
+    -D OPENVDB_SHARED=ON \
     -D ZLIB_ROOT=$HT \
     -D BOOST_ROOT=$HT \
     -D BOOST_LIBRARYDIR=$HDSO \
@@ -131,6 +138,7 @@ export CPPUNIT_ROOT=$RHOME/Systems-gcc48/cppunit/v1.10.2
 export MAYA_LOCATION=/sw/external/autodesk/maya2016-sp5-x64
 export TBB_ROOT=$MAYA_LOCATION
 cmake \
+    -D OPENVDB_SHARED=ON \
     -D Tbb_TBB_LIBRARY=$MAYA_LOCATION/lib/libtbb.so \
     -D Tbb_TBBMALLOC_LIBRARY=$MAYA_LOCATION/lib/libtbbmalloc.so \
     -D OPENVDB_ENABLE_3_ABI_COMPATIBLE=ON \
@@ -166,6 +174,9 @@ set OPENEXR_ROOT=C:\Systems\x64\vc14\OpenEXR\v2.2.0-static
 set TBB_ROOT=C:\Systems\x64\tbb2017_20160916oss
 set BLOSC_ROOT=C:\Systems\x64\vc14\c-blosc\v1.7.0
 cmake ^
+      -D OPENVDB_BUILD_TOOLS=ON \
+      -D OPENVDB_STATIC=ON \
+      -D OPENVDB_SHARED=ON \
       -D DOXYGEN_SKIP_DOT=ON ^
       -D Blosc_USE_STATIC_LIBS=OFF ^
       -D USE_GLFW3=ON ^
