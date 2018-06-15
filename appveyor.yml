@@ -65,6 +65,9 @@ build_script:
 
 after_build: 7z a openvdb.zip %APPVEYOR_BUILD_FOLDER%\install
 
+test_script:
+  - cmd: ctest.exe -VV -C %configuration%
+
 artifacts:
   - path: openvdb.zip
     name: OpenVDB
