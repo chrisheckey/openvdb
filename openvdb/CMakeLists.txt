@@ -122,8 +122,12 @@ IF ( NOT OPENVDB_BUILD_HOUDINI_SOPS )
   INCLUDE_DIRECTORIES ( SYSTEM ${ZLIB_INCLUDE_DIR} )
 ENDIF ()
 
+# When building with vcpkg toolchain, static and dynamic headers can get
+# mixed up.  This forces the ilmbase and openexr libraries we want to 
+# source first.  Should prevent half::_toFloat and half::_eLut linking errors
 INCLUDE_DIRECTORIES ( BEFORE SYSTEM ${ILMBASE_INCLUDE_DIRS} )
 INCLUDE_DIRECTORIES ( BEFORE SYSTEM ${OPENEXR_INCLUDE_DIRS} )
+
 INCLUDE_DIRECTORIES ( SYSTEM ${GLFW_INCLUDE_DIRECTORY} )
 
 IF (WIN32)
