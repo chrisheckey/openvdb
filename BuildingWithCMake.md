@@ -185,13 +185,58 @@ cmake ^
 
 ### Build Maya Plugin 
 ```{r, engine='batch', count_lines}
+:: Build OpenVDB Maya (shared, tools, pymodule, tests) with included cmake
+
+@ECHO OFF
+
+call :DATETIME
+echo Started Building OpenVDB on %_DATETIME%
+title OpenVDB Build %_DATETIME%
+
 setlocal
+
+:: Clone
+set ROOT_DIR=%~dp0
+set CLONE_DIR=openvdb_maya
+set CLONE_ROOT=%ROOT_DIR%%CLONE_DIR%
+set INSTALL_DIR=install_maya
+set INSTALL_ROOT=%ROOT_DIR%%INSTALL_DIR%
+
+if exist %CLONE_ROOT% del /f /q %CLONE_ROOT% && rmdir /s /q %CLONE_ROOT%\
+if exist %CLONE_ROOT% del /f /q %CLONE_ROOT% && rmdir /s /q %CLONE_ROOT%\
+git clone https://github.com/chrisheckey/openvdb.git --branch maya_build --depth 10 %CLONE_DIR%
+rem git clone https://github.com/chrisheckey/openvdb.git --branch win_build --depth 10 %CLONE_DIR%
+cd %CLONE_ROOT%
+
+if not exist %INSTALL_ROOT%_archive mkdir %INSTALL_ROOT%_archive
+if exist %INSTALL_ROOT% move %INSTALL_ROOT% %INSTALL_ROOT%_archive\%_DATETIME%
+mkdir %INSTALL_ROOT%
+mkdir %INSTALL_ROOT%\maya2018
+
+:: Maya Dep Versions (2018.03)
+:: https://knowledge.autodesk.com/support/maya/learn-explore/caas/simplecontent/content/autodesk-maya-20183-update-open-source-components.html
+
+:: Boost 1.61
+:: https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.zip
+:: https://sourceforge.net/projects/boost/files/boost-binaries/1.61.0/boost_1_61_0-msvc-14.0-64.exe/download
+
+:: TBB 4.4 update 6
+:: https://github.com/01org/tbb/releases/download/4.4.6/tbb44_20160803oss_win.zip
+
+:: Python 2.7.11 (Built with Visual Studio 2015 to match mayapy.exe)
+:: 
+
+:: GLEW 1.10.0
+:: https://sourceforge.net/projects/glew/files/glew/1.10.0/glew-1.10.0-win32.zip/download
 :: Build Settings
 set OPENVDB_ABI="4"
-set TESTS=OFF
+set TESTS=ON
 set PYTHON_MODULE=OFF
-set TOOLS=OFF
+set TOOLS=ON
 set DOCS=OFF
+set STATIC=ON
+set SHARED=ON
+set DEBUG=OFF
 
 rem Assumes we have vcpkg and our custom built Maya Python 2.7.11 two levels up
 set DEV_DIR=%~dp0..\..\
@@ -205,7 +250,7 @@ set VCPKG_ROOT=%DEV_DIR%vcpkg
 set VCPKG_x64_SHARED_ROOT=%VCPKG_ROOT%/installed/x64-windows
 set VCPKG_x64_STATIC_ROOT=%VCPKG_ROOT%/installed/x64-windows-static
 :: Install Packages with vcpkg before running
-rem vcpkg install glew glfw3 zlib blosc openexr tbb cppunit
+rem vcpkg install glfw3 zlib blosc openexr cppunit
 rem vcpkg integrate install
 rem set CMAKE_PREFIX_PATH=%CMAKE_PREFIX_PATH%;%VCPKG_ROOT%
 
@@ -221,24 +266,20 @@ set CMAKE_PREFIX_PATH=%CMAKE_PREFIX_PATH%;%MAYA_ROOT%
 
 set CMAKE_PREFIX_PATH=%CMAKE_PREFIX_PATH%;%BOOST_ROOT%
 
-set CMAKE_MODULE_PATH=%VCPKG_ROOT%\installed\x64-windows\share\openexr
-
 :: Build
 mkdir build
 cd build
 
 cmake -G "Visual Studio 14 2015 Win64" ^
  -DCMAKE_TOOLCHAIN_FILE=%VCPKG_ROOT%/scripts/buildsystems/vcpkg.cmake ^
- -DVCPKG_TARGET_TRIPLET=x64-windows ^
- -DVCPKG_CRT_LINKAGE="dynamic" ^
 
- -DCMAKE_CONFIGURATION_TYPES="Release" ^
+ -DCMAKE_CONFIGURATION_TYPES=%CONFIG% ^
  -DCMAKE_INSTALL_PREFIX=%INSTALL_ROOT% ^
  -DOPENVDB_ABI_VERSION_NUMBER=%OPENVDB_ABI% ^
  -DUSE_GLFW3=ON ^
 
- -DOPENVDB_SHARED=ON ^
- -DOPENVDB_STATIC=OFF ^
+ -DOPENVDB_SHARED=%SHARED% ^
+ -DOPENVDB_STATIC=%STATIC% ^
 
  -DOPENVDB_BUILD_TOOLS=%TOOLS% ^
  -DOPENVDB_BUILD_PYTHON_MODULE=%PYTHON_MODULE% ^
@@ -283,4 +324,17 @@ cmake -G "Visual Studio 14 2015 Win64" ^
  -DMAYA_SEARCH_SHIPPED_BOOST=ON ^
  -DOPENVDB_MAYA_INSTALL_BASE_DIR=%INSTALL_ROOT%/maya2018 ^
 ..
+
+cmake --build . --config "Release" --target install
+
+cd %~dp0
+
+GOTO :EOF
+:: --------
+
+:DATETIME
+set __hr=%time:~0,2%
+set __hr=%__hr: =0%
+set _DATETIME=%date:~10,4%%date:~4,2%%date:~7,2%_%__hr%h%time:~3,2%m%time:~6,2%s
+EXIT /B 0
 ```
