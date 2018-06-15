@@ -65,12 +65,10 @@ build_script:
 
 after_build:
   - cmd: 7z a %APPVEYOR_BUILD_FOLDER%\openvdb.zip %APPVEYOR_BUILD_FOLDER%\install
+  - cmd: appveyor PushArtifact %APPVEYOR_BUILD_FOLDER%\openvdb.zip
 
 test_script:
   - cmd: ctest -VV -C %configuration%
-
-artifacts:
-  - path: $(APPVEYOR_BUILD_FOLDER)\openvdb.zip
 
 #init:
 #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
