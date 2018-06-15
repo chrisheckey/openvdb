@@ -222,10 +222,10 @@ mkdir %INSTALL_ROOT%\maya2018
 :: https://github.com/01org/tbb/releases/download/4.4.6/tbb44_20160803oss_win.zip
 
 :: Python 2.7.11 (Built with Visual Studio 2015 to match mayapy.exe)
-:: 
 
 :: GLEW 1.10.0
 :: https://sourceforge.net/projects/glew/files/glew/1.10.0/glew-1.10.0-win32.zip/download
+
 :: Build Settings
 set OPENVDB_ABI="4"
 set TESTS=ON
