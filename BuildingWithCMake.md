@@ -203,9 +203,7 @@ set INSTALL_DIR=install_maya
 set INSTALL_ROOT=%ROOT_DIR%%INSTALL_DIR%
 
 if exist %CLONE_ROOT% del /f /q %CLONE_ROOT% && rmdir /s /q %CLONE_ROOT%\
-if exist %CLONE_ROOT% del /f /q %CLONE_ROOT% && rmdir /s /q %CLONE_ROOT%\
 git clone https://github.com/chrisheckey/openvdb.git --branch maya_build --depth 10 %CLONE_DIR%
-rem git clone https://github.com/chrisheckey/openvdb.git --branch win_build --depth 10 %CLONE_DIR%
 cd %CLONE_ROOT%
 
 if not exist %INSTALL_ROOT%_archive mkdir %INSTALL_ROOT%_archive
@@ -236,7 +234,7 @@ set TOOLS=ON
 set DOCS=OFF
 set STATIC=ON
 set SHARED=ON
-set DEBUG=OFF
+set CONFIG="Release"
 
 rem Assumes we have vcpkg and our custom built Maya Python 2.7.11 two levels up
 set DEV_DIR=%~dp0..\..\
