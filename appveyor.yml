@@ -53,7 +53,7 @@ before_build:
   - cmd: set BOOST_LIBRARYDIR=C:\Libraries\boost_1_67_0\lib64-msvc-14.0
   - cmd: set CMAKE_PREFIX_PATH=%CMAKE_PREFIX_PATH%;%BOOST_ROOT%
 
-  - cmd: set PYTHON_ROOT = "C:\Python27-x64"
+  - cmd: set PYTHON_ROOT="C:\Python27-x64"
   - cmd: set CMAKE_PREFIX_PATH=%CMAKE_PREFIX_PATH%;%PYTHON_ROOT%
 
 build_script:
@@ -64,14 +64,13 @@ build_script:
   - cmd: cmake --build . --config %CONFIGURATION% --target install
 
 after_build:
-  - cmd: 7z a openvdb.zip %APPVEYOR_BUILD_FOLDER%\install
+  - cmd: 7z a %APPVEYOR_BUILD_FOLDER%\openvdb.zip %APPVEYOR_BUILD_FOLDER%\install
 
 test_script:
   - cmd: ctest -VV -C %configuration%
 
 artifacts:
-  - path: openvdb.zip
-    name: OpenVDB
+  - path: $(APPVEYOR_BUILD_FOLDER)\openvdb.zip
 
 #init:
 #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
