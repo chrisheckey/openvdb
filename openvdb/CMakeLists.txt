@@ -429,6 +429,12 @@ IF ( OPENVDB_BUILD_UNITTESTS )
     #stdc++
     )
 
+  IF (MSVC)
+    SET_TARGET_PROPERTIES( vdb_test
+      PROPERTIES COMPILE_FLAGS "/MT"
+    )
+  ENDIF()
+
   ADD_TEST ( vdb_unit_test vdb_test )
 
 ENDIF (OPENVDB_BUILD_UNITTESTS)
