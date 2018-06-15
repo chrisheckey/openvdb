@@ -6,7 +6,7 @@
 > Redistributions of source code must retain the above copyright
 > and license notice and the following restrictions and disclaimer.
 >
-> *     Neither the name of DreamWorks Animation nor the names of
+> Neither the name of DreamWorks Animation nor the names of
 > its contributors may be used to endorse or promote products derived
 > from this software without specific prior written permission.
 >
