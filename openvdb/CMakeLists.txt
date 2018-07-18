@@ -430,7 +430,7 @@ IF ( OPENVDB_BUILD_UNITTESTS )
     )
 
   IF (MSVC)
-    TARGET_COMPILE_OPTIONS( vdb_test "/MT" )
+    TARGET_COMPILE_OPTIONS( vdb_test PRIVATE /MT )
   ENDIF()
 
   ADD_TEST ( vdb_unit_test vdb_test )
