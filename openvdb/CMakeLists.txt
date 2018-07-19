@@ -429,9 +429,9 @@ IF ( OPENVDB_BUILD_UNITTESTS )
     #stdc++
     )
 
-  IF (MSVC)
-    TARGET_COMPILE_OPTIONS( vdb_test PRIVATE /MT )
-  ENDIF()
+  # IF (MSVC)
+  #   TARGET_COMPILE_OPTIONS( vdb_test PRIVATE /MT )
+  # ENDIF()
 
   ADD_TEST ( vdb_unit_test vdb_test )
 
