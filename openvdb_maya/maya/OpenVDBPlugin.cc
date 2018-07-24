@@ -50,75 +50,55 @@
 #include <maya/MPlug.h>
 #include <maya/MFnPluginData.h>
 
-#include <tbb/mutex.h>
-
-#include <vector>
-#include <sstream>
-#include <string>
 
 ////////////////////////////////////////
 
 
 namespace openvdb_maya {
 
-
-namespace {
-
-struct NodeInfo {
-    MString typeName;
-    MTypeId typeId;
-    MCreatorFunction creatorFunction;
-    MInitializeFunction initFunction;
-    MPxNode::Type type;
-    const MString* classification;
-};
-
-typedef std::vector<NodeInfo> NodeList;
-
-typedef tbb::mutex Mutex;
-typedef Mutex::scoped_lock Lock;
-
-// Declare this at file scope to ensure thread-safe initialization.
-Mutex sRegistryMutex;
-
-NodeList * gNodes = NULL;
-
-} // unnamed namespace
-
-
 NodeRegistry::NodeRegistry(const MString& typeName, const MTypeId& typeId,
-    MCreatorFunction creatorFunction, MInitializeFunction initFunction,
-    MPxNode::Type type, const MString* classification)
+	MCreatorFunction creatorFunction, MInitializeFunction initFunction,
+	MPxNode::Type type, const MString* classification)
 {
-    NodeInfo node;
-    node.typeName           = typeName;
-    node.typeId             = typeId;
-    node.creatorFunction    = creatorFunction;
-    node.initFunction       = initFunction;
-    node.type               = type;
-    node.classification     = classification;
+	// Constructor
 
-    Lock lock(sRegistryMutex);
+	NodeInfo node;
+	node.typeName = typeName;
+	node.typeId = typeId;
+	node.creatorFunction = creatorFunction;
+	node.initFunction = initFunction;
+	node.type = type;
+	node.classification = classification;
 
-    if (!gNodes) {
-        OPENVDB_START_THREADSAFE_STATIC_WRITE
-        gNodes = new NodeList();
-        OPENVDB_FINISH_THREADSAFE_STATIC_WRITE
-    }
-
-    gNodes->push_back(node);
+	Lock lock(mutex());
+	nodes()->push_back(node);
 }
 
+NodeRegistry::Mutex&
+NodeRegistry::mutex()
+{
+	static NodeRegistry::Mutex mutex;
+	return mutex;
+}
+
+NodeRegistry::NodeList*
+NodeRegistry::nodes()
+{
+	OPENVDB_START_THREADSAFE_STATIC_WRITE
+	static NodeRegistry::NodeList * nodes = new NodeList();
+	OPENVDB_FINISH_THREADSAFE_STATIC_WRITE
+	return nodes;
+}
 
 void
 NodeRegistry::registerNodes(MFnPlugin& plugin, MStatus& status)
 {
-    Lock lock(sRegistryMutex);
+    Lock lock(mutex());
 
-    if (gNodes) {
-        for (size_t n = 0, N = gNodes->size(); n < N; ++n) {
+    if (nodes()) {
+        for (size_t n = 0, N = nodes()->size(); n < N; ++n) {
 
-            const NodeInfo& node = (*gNodes)[n];
+            const NodeInfo& node = (*nodes())[n];
 
             status = plugin.registerNode(node.typeName, node.typeId,
                 node.creatorFunction, node.initFunction, node.type, node.classification);
@@ -137,12 +117,12 @@ NodeRegistry::registerNodes(MFnPlugin& plugin, MStatus& status)
 void
 NodeRegistry::deregisterNodes(MFnPlugin& plugin, MStatus& status)
 {
-    Lock lock(sRegistryMutex);
+    Lock lock(mutex());
 
-    if (gNodes) {
-        for (size_t n = 0, N = gNodes->size(); n < N; ++n) {
+    if (nodes()) {
+        for (size_t n = 0, N = nodes()->size(); n < N; ++n) {
 
-            const NodeInfo& node = (*gNodes)[n];
+            const NodeInfo& node = (*nodes())[n];
 
             status = plugin.deregisterNode(node.typeId);
 

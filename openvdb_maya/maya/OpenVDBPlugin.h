@@ -41,21 +41,43 @@
 #define MNoVersionString
 #include <maya/MFnPlugin.h>
 
+#include <tbb/mutex.h>
+
+#include <vector>
+#include <sstream>
+#include <string>
+
 ////////////////////////////////////////
 
 
 namespace openvdb_maya {
 
-struct NodeRegistry
-{
-    NodeRegistry(const MString& typeName, const MTypeId& typeId,
-        MCreatorFunction creatorFunction,
-        MInitializeFunction initFunction,
-        MPxNode::Type type = MPxNode::kDependNode,
-        const MString* classification = NULL);
+class NodeRegistry
+	{
+	public:
 
-    static void registerNodes(MFnPlugin& plugin, MStatus& status);
-    static void deregisterNodes(MFnPlugin& plugin, MStatus& status);
+		NodeRegistry(const MString& typeName, const MTypeId& typeId,
+			MCreatorFunction creatorFunction, MInitializeFunction initFunction,
+			MPxNode::Type type = MPxNode::kDependNode,
+			const MString* classification = NULL);
+
+		struct NodeInfo {
+			MString typeName;
+			MTypeId typeId;
+			MCreatorFunction creatorFunction;
+			MInitializeFunction initFunction;
+			MPxNode::Type type;
+			const MString* classification;
+		};
+
+		typedef std::vector<NodeInfo> NodeList;
+		typedef tbb::mutex Mutex;
+		typedef Mutex::scoped_lock Lock;
+
+		static Mutex& mutex();
+		static NodeList* nodes();
+		static void registerNodes(MFnPlugin&, MStatus&);
+		static void deregisterNodes(MFnPlugin&, MStatus&);
 };
 
 } // namespace openvdb_maya
