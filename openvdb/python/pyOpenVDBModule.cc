@@ -660,6 +660,9 @@ struct VecTypeDescr
 #ifdef DWA_OPENVDB
 #define PY_OPENVDB_MODULE_NAME  _openvdb
 extern "C" { void init_openvdb(); }
+#elif _WIN32
+#define PY_OPENVDB_MODULE_NAME pyopenvdb
+extern "C" { __declspec(dllexport) void initpyopenvdb(); }
 #else
 #define PY_OPENVDB_MODULE_NAME  pyopenvdb
 extern "C" { void initpyopenvdb(); }
