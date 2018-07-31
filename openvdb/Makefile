@@ -135,9 +135,9 @@ CONCURRENT_MALLOC_LIB_DIR := $(HDSO)
 
 # The parent directory of the cppunit/ header directory
 # (leave blank if CppUnit is unavailable)
-CPPUNIT_INCL_DIR := /rel/map/generic-2013.22/sys_include
+CPPUNIT_INCL_DIR :=
 # The directory containing libcppunit
-CPPUNIT_LIB_DIR := /rel/depot/third_party_build/cppunit/1.10.2-7/opt-ws5-x86_64-gccWS5_64/lib
+CPPUNIT_LIB_DIR :=
 CPPUNIT_LIB := -lcppunit
 
 # The parent directory of the log4cplus/ header directory
@@ -357,6 +357,7 @@ INCLUDE_NAMES := \
     points/AttributeSet.h \
     points/IndexFilter.h \
     points/IndexIterator.h \
+    points/PointAdvect.h \
     points/PointAttribute.h \
     points/PointConversion.h \
     points/PointCount.h \
@@ -364,6 +365,7 @@ INCLUDE_NAMES := \
     points/PointDelete.h \
     points/PointGroup.h \
     points/PointMask.h \
+    points/PointMove.h \
     points/PointSample.h \
     points/PointScatter.h \
     points/StreamCompression.h \
@@ -525,6 +527,7 @@ UNITTEST_SRC_NAMES := \
     unittest/TestNodeMask.cc \
     unittest/TestParticleAtlas.cc \
     unittest/TestParticlesToLevelSet.cc \
+    unittest/TestPointAdvect.cc \
     unittest/TestPointAttribute.cc \
     unittest/TestPointConversion.cc \
     unittest/TestPointCount.cc \
@@ -533,6 +536,7 @@ UNITTEST_SRC_NAMES := \
     unittest/TestPointGroup.cc \
     unittest/TestPointIndexGrid.cc \
     unittest/TestPointMask.cc \
+    unittest/TestPointMove.cc \
     unittest/TestPointPartitioner.cc \
     unittest/TestPointSample.cc \
     unittest/TestPointScatter.cc \
