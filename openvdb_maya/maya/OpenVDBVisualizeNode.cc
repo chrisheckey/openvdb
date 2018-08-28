@@ -144,6 +144,9 @@ namespace {
 
 OpenVDBVisualizeNode::OpenVDBVisualizeNode()
 {
+	//added to fix openVDBVisualize crashing
+	glewInit();
+
     mSurfaceShader.setVertShader(
         "#version 120\n"
         "varying vec3 normal;\n"
